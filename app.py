@@ -1,16 +1,12 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_file
 from chatbot import get_response
+import os
 
 app = Flask(__name__)
 
-# Serve HTML and CSS directly from main folder
 @app.route("/")
 def home():
-    return send_from_directory('.', 'index.html')
-
-@app.route("/style.css")
-def style():
-    return send_from_directory('.', 'style.css')
+    return send_file("index.html")
 
 @app.route("/get_response", methods=["POST"])
 def chat():
@@ -19,4 +15,5 @@ def chat():
     return jsonify({"reply": bot_reply})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port, debug=False)
